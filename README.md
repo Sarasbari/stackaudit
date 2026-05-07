@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+# StackAudit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Are you overpaying for AI tools?** Enter your team's AI stack and get an instant audit showing exactly where you're overspending and how much you could save.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+StackAudit analyzes your team's AI tool spending across 8 popular tools:
 
-## React Compiler
+| Tool | Vendor | Category |
+|------|--------|----------|
+| Cursor | Anysphere | Coding IDE |
+| GitHub Copilot | GitHub / Microsoft | Coding assistant |
+| Claude | Anthropic | AI chat |
+| ChatGPT | OpenAI | AI chat |
+| Anthropic API | Anthropic | API |
+| OpenAI API | OpenAI | API |
+| Gemini | Google | AI chat |
+| Windsurf | Codeium | Coding IDE |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+It generates recommendations to:
+- **Downgrade plans** you're over-provisioned on
+- **Reduce seats** you're not using
+- **Switch tools** to cheaper alternatives with equivalent capability
+- **Use credits** to get the same access at a discount
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React 19 + TypeScript + Vite
+- **Styling:** Tailwind CSS v4
+- **State:** localStorage persistence via custom hooks
+- **Backend:** Supabase (planned — audit storage + lead capture)
+- **Deployment:** Vercel
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Install dependencies
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start dev server
+npm run dev
+
+# Type-check
+npx tsc --noEmit
+
+# Production build
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── types/          # TypeScript type definitions
+│   └── index.ts    # ToolDefinition, FormState, AuditResult, LeadData
+├── data/           # Static data
+│   ├── tools.ts    # 8 tool definitions with pricing
+│   └── index.ts    # Barrel exports
+├── hooks/          # React hooks
+│   ├── usePersistedState.ts  # localStorage persistence
+│   ├── useTools.ts           # Form state management
+│   ├── useStack.ts           # Audit engine
+│   └── index.ts
+├── components/     # UI components
+│   └── form/
+│       └── ToolCard.tsx      # Tool entry card + add picker
+├── pages/          # Route pages
+│   └── SpendForm.tsx         # Main spend input form
+└── App.tsx         # Router setup
+```
+
+## Pricing Data
+
+All pricing is sourced from official vendor pages and documented in [`PRICING_DATA.md`](./PRICING_DATA.md) with verification dates.
+
+## License
+
+Private — not open source.
